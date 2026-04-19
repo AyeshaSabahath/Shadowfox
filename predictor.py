@@ -30,12 +30,20 @@ class SmartKeyboard:
         corrected_words = []
 
         for word in words:
-            corrected = self.spell.correction(word)
+            clean_word = word.strip(".,!?")
 
-        if corrected is None:
-            corrected = word
+            # Get correction
+            corrected = self.spell.correction(clean_word)
 
-        corrected_words.append(corrected)
+            # If no correction found, keep original
+            if corrected is None:
+                corrected = clean_word
+
+            # Preserve capitalization (for "I")
+            if word.istitle():
+                corrected = corrected.capitalize()
+
+            corrected_words.append(corrected)
 
         return corrected_words
 
