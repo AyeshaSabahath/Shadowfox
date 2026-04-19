@@ -1,28 +1,52 @@
-from collections import defaultdict
+from collections import defaultdict, Counter
 from spellchecker import SpellChecker
 
 spell = SpellChecker()
 
 class SmartKeyboard:
     def __init__(self, text_file):
+        self.spell = SpellChecker()
         self.bigram_model = defaultdict(list)
+        self.word_frequency = Counter()
         self.train_model(text_file)
 
     def train_model(self, text_file):
-        with open(text_file, "r") as file:
+        with open(text_file, "r", encoding="utf-8") as file:
             lines = file.readlines()
 
         for line in lines:
-            words = line.lower().split()
+            words = line.lower().strip().split()
+
+            for word in words:
+                self.word_frequency[word] += 1
+
             for i in range(len(words) - 1):
-                self.bigram_model[words[i]].append(words[i + 1])
+                current_word = words[i]
+                next_word = words[i + 1]
+                self.bigram_model[current_word].append(next_word)
 
-    def autocorrect_word(self, word):
-        return spell.correction(word)
+    def autocorrect_sentence(self, sentence):
+        words = sentence.split()
+        corrected_words = []
 
-    def predict_next_word(self, word):
-        word = word.lower()
-        if word in self.bigram_model:
-            predictions = self.bigram_model[word]
-            return max(set(predictions), key=predictions.count)
-        return "No suggestion"
+        for word in words:
+            corrected = self.spell.correction(word)
+
+        if corrected is None:
+            corrected = word
+
+        corrected_words.append(corrected)
+
+        return corrected_words
+
+    def predict_next_words(self, last_word, top_n=3):
+        last_word = last_word.lower()
+
+        if last_word not in self.bigram_model:
+            return ["No suggestion"]
+
+        predictions = self.bigram_model[last_word]
+
+        ranked_predictions = Counter(predictions).most_common(top_n)
+
+        return [word for word, _ in ranked_predictions]
