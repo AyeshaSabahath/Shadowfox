@@ -3,25 +3,24 @@ from predictor import SmartKeyboard
 
 keyboard = SmartKeyboard("sample_text.txt")
 
+st.set_page_config(page_title="Smart Autocorrect Keyboard")
+
 st.title("Smart Autocorrect Keyboard")
 
 sentence = st.text_input("Type your sentence")
 
-if sentence:
-    words = sentence.split()
-
-    corrected_words = []
-    for word in words:
-        corrected = keyboard.autocorrect_word(word)
-        corrected_words.append(corrected)
-
+if sentence.strip():
+    corrected_words = keyboard.autocorrect_sentence(sentence)
     corrected_sentence = " ".join(corrected_words)
 
-    st.write("Corrected Sentence:")
+    st.subheader("Corrected Sentence")
     st.success(corrected_sentence)
 
     last_word = corrected_words[-1]
-    prediction = keyboard.predict_next_word(last_word)
 
-    st.write("Next Word Prediction:")
-    st.info(prediction)
+    suggestions = keyboard.predict_next_words(last_word)
+
+    st.subheader("Next Word Suggestions")
+
+    for suggestion in suggestions:
+        st.info(suggestion)

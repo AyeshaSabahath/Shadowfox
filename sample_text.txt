@@ -1,9 +1,13 @@
-I am going to college today
-I am working on my project
-I am learning artificial intelligence
-Machine learning is very interesting
-Artificial intelligence is the future
-I love coding in python
-Python is easy to learn
+I am going to college
+I am going to eat
 I am going home
-I am going to eat food
+I am going to school
+I am learning python
+I am learning machine learning
+I love coding in python
+python is easy to learn
+machine learning is interesting
+artificial intelligence is the future
+I am going to work
+I am going to sleep
+I am going to office
